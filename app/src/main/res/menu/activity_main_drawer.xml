@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_voltage"
+            android:title="@string/voltage_sensor" />
+        <item
+            android:id="@+id/nav_current"
+            android:title="@string/current_sensor" />
+        <item
+            android:id="@+id/nav_flame"
+            android:title="@string/flame_sensor" />
+        <item
+            android:id="@+id/nav_temperature_humid"
+            android:title="@string/temperature_humid_sensor" />
+        <item
+            android:id="@+id/nav_motion"
+            android:title="@string/motion_detect" />
+        <item
+            android:id="@+id/nav_distance"
+            android:title="@string/distance_meter" />
+        <item
+            android:id="@+id/nav_smoke"
+            android:title="@string/smoke_detect" />
+    </group>
+</menu>

@@ -31,12 +31,14 @@ void setup() {
   pinMode(vibraPin, INPUT);
   pinMode(flamePin, INPUT);
   pinMode(gasPin, INPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
 
   serialBT.begin("ESP32"); // Bluetooth device name
 
   tempSensor.begin();
 }
-0
+
 void voltage_sensor() {
 // Voltage sensor
   int voltageValue = analogRead(voltagePin); // Read the analog value from the sensor
@@ -49,7 +51,10 @@ void voltage_sensor() {
     Serial.print(", Voltage: "); 
     Serial.print(voltage, 2);
     Serial.println("V");
+    String strNumber = String(voltage);
+    serialBT.println(strNumber);
   }
+  delay(500);
 }
 
 void ultra_sonic_sensor() {
@@ -136,25 +141,17 @@ void motion_sensor() {
 
 }
 
+int cmd = -1;
+
 void loop() {
 
-  while(serialBT.available()) {
-    int get_data = serialBT.read();
+  if(serialBT.available()) {
+    cmd = serialBT.read();
+    Serial.println(cmd);
+  }
 
-    if(get_data ==  1)
-      voltage_sensor();
-    else if(get_data == 2)
-      current_sensor();
-    else if(get_data == 3)
-      flame_sensor();
-    else if(get_data == 4)
-      temperature_humid_sensor();
-    else if(get_data == 5)
-      motion_sensor();
-    else if(get_data == 6)
-      ultra_sonic_sensor();
-    else if(get_data == 7)
-      gas_sensor();
+  if(cmd == '1') {
+    voltage_sensor();
   }
 
   delay(50);

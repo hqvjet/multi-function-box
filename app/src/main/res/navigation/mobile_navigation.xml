@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_voltage">
+
+    <fragment
+        android:id="@+id/nav_voltage"
+        android:name="com.example.multi_functionbox.ui.voltage.VoltageFragment"
+        android:label="@string/voltage_sensor"
+        tools:layout="@layout/fragment_voltage" />
+
+    <fragment
+        android:id="@+id/nav_current"
+        android:name="com.example.multi_functionbox.ui.current.CurrentFragment"
+        android:label="@string/current_sensor"
+        tools:layout="@layout/fragment_current" />
+
+    <fragment
+        android:id="@+id/nav_flame"
+        android:name="com.example.multi_functionbox.ui.flame.FlameFragment"
+        android:label="@string/flame_sensor"
+        tools:layout="@layout/fragment_flame" />
+
+    <fragment
+        android:id="@+id/nav_temperature_humid"
+        android:name="com.example.multi_functionbox.ui.temperature_humid.TemperatureHumidFragment"
+        android:label="@string/temperature_humid_sensor"
+        tools:layout="@layout/fragment_temperature_humid" />
+
+    <fragment
+        android:id="@+id/nav_motion"
+        android:name="com.example.multi_functionbox.ui.motion.MotionFragment"
+        android:label="@string/motion_detect"
+        tools:layout="@layout/fragment_motion" />
+
+    <fragment
+        android:id="@+id/nav_distance"
+        android:name="com.example.multi_functionbox.ui.distance.DistanceFragment"
+        android:label="@string/distance_meter"
+        tools:layout="@layout/fragment_distance" />
+
+    <fragment
+        android:id="@+id/nav_smoke"
+        android:name="com.example.multi_functionbox.ui.smoke.SmokeFragment"
+        android:label="@string/smoke_detect"
+        tools:layout="@layout/fragment_smoke" />
+</navigation>

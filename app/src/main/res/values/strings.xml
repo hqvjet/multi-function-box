@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Multi-function Box</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="voltage_sensor">Voltage Sensor</string>
+    <string name="current_sensor">Current Sensor</string>
+    <string name="flame_sensor">Flame Sensor</string>
+    <string name="temperature_humid_sensor">Temperature-Humid Sensor</string>
+    <string name="motion_detect">Motion Detect</string>
+    <string name="distance_meter">Distance Meter</string>
+    <string name="smoke_detect">Smoke Detect</string>
+</resources>
