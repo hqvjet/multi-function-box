@@ -2,7 +2,6 @@ package com.example.multi_functionbox.ui.voltage
 
 import BluetoothViewModel
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.multi_functionbox.databinding.FragmentVoltageBinding
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class VoltageFragment : Fragment() {
@@ -46,7 +43,6 @@ class VoltageFragment : Fragment() {
                 e.printStackTrace()
             }
         }
-
         // Read data from inputStream and update UI
         lifecycleScope.launch {
             bluetoothViewModel.inputStream.observe(viewLifecycleOwner) { inputStream ->
@@ -62,8 +58,9 @@ class VoltageFragment : Fragment() {
                             // Update UI only when non-empty data arrives
                             if (incomingMessage.trim().isNotEmpty()) {
                                 activity?.runOnUiThread {
-                                    val textView: TextView = binding.textVoltage
-                                    textView.text = incomingMessage.trim()
+                                    _binding?.textVoltage?.let { textView ->
+                                        textView.text = incomingMessage.trim()
+                                    }
                                 }
                             }
                         }

@@ -18,7 +18,7 @@ DallasTemperature tempSensor(&oneWire);
 // Current Sensor
 const int currentPin = 15;
 // Flame Sensor
-const int flamePin = 23;
+const int flamePin = 32;
 // Gas Sensor
 const int gasPin = 21;
 
@@ -31,8 +31,6 @@ void setup() {
   pinMode(vibraPin, INPUT);
   pinMode(flamePin, INPUT);
   pinMode(gasPin, INPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
 
   serialBT.begin("ESP32"); // Bluetooth device name
 
@@ -60,26 +58,35 @@ void voltage_sensor() {
 void ultra_sonic_sensor() {
 // Sonic wave sensor
   long duration, distance;
+  long averange = 0;
   
   // Trigger pulse for 10 microseconds to start the ranging
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  // Measure the duration of the pulse from the sensor
-  duration = pulseIn(echoPin, HIGH);
-  
-  // Calculate the distance in centimeters (assumes speed of sound as 34300 cm/s)
-  distance = (duration / 2) / 29.1; // Divide by 2 for return trip and by 29.1 (microseconds to cm)
-  
-  // Output the distance measured
-  if(distance <= 400) {
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
+  for(int i(0); i < 6; ++ i) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(4);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    
+    // Measure the duration of the pulse from the sensor
+    duration = pulseIn(echoPin, HIGH);
+    
+    // Calculate the distance in centimeters (assumes speed of sound as 34300 cm/s)
+    distance = duration / 29 / 2; // Divide by 2 for return trip and by 29.1 (microseconds to cm)
+    
+    averange += distance;
+
+    delay(100);
   }
+
+  averange /= 5;
+
+  Serial.print("Distance: ");
+  Serial.print(averange);
+  Serial.println(" cm");
+  String strNumber = String(averange);
+  serialBT.println(strNumber);
+  
 }
 
 void current_sensor() {
@@ -93,20 +100,32 @@ void current_sensor() {
   // Calculate current in Amperes
   float current = (voltageA - 1.515) / sensitivity; // Subtract 2.5V (midpoint) and divide by sensitivity
 
-  if(current > 0.01) {
-    Serial.print("Current: ");
-    Serial.print(current, 3); // Print current with 3 decimal places for precision
-    Serial.println(" A");
-  }
+  Serial.print("Current: ");
+  Serial.print(current, 3); // Print current with 3 decimal places for precision
+  Serial.println(" A");
+  String strNumber = String(current);
+  serialBT.println(strNumber);
+  
+  delay(500);
 }
 
 void flame_sensor() {
 // Flame Sensor
-  int flameValue = digitalRead(flamePin);
+  int threshold = 500;
+  int flameValue = analogRead(flamePin);
 
-  if (flameValue == HIGH) {
-    Serial.println("FLAME DETECTED!");
+  Serial.print("Sensor Value: ");
+  Serial.println(flameValue);
+
+  if (flameValue <= threshold) {
+    Serial.println("Flame detected!");
+    serialBT.println("Flame detected!");
+  } else {
+    Serial.println("No flame detected");
+    serialBT.println("No Flame detected!");
   }
+
+  delay(1000);
 }
 
 void gas_sensor() {
@@ -114,6 +133,10 @@ void gas_sensor() {
   int gasValue = analogRead(gasPin);
 
   Serial.println(gasValue);
+  
+  String strNumber = String(gasValue);
+  serialBT.println(strNumber);
+  
   // // Smoke detection logic
   // if (gasValue > 600) {
   //   Serial.println("Smoke detected!");
@@ -131,6 +154,7 @@ void gas_sensor() {
   //   Serial.println("Alcohol detected!");
   //   // Add action for alcohol detection
   // }
+  delay(500);
 }
 
 void temperature_humid_sensor() {
@@ -153,6 +177,22 @@ void loop() {
   if(cmd == '1') {
     voltage_sensor();
   }
-
-  delay(50);
+  else if(cmd == '2') {
+    current_sensor();
+  }
+  else if(cmd == '3') {
+    flame_sensor();
+  }
+  else if(cmd == '4') {
+    temperature_humid_sensor();
+  }
+  else if(cmd == '5') {
+    motion_sensor();
+  }
+  else if(cmd == '6') {
+    ultra_sonic_sensor();
+  } 
+  else if(cmd == '7') {
+    gas_sensor();
+  }
 }

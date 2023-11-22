@@ -46,8 +46,9 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
 
         binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            connectToDevice("08:D1:F9:D3:D5:46")
+            bluetoothViewModel.outputStream.value = outputStream
+            bluetoothViewModel.inputStream.value = inputStream
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
