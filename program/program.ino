@@ -1,6 +1,5 @@
-#include<DallasTemperature.h>
-#include<OneWire.h>
 #include<BluetoothSerial.h>
+#include<Adafruit_AHTX0.h>
 
 BluetoothSerial serialBT;
 
@@ -9,18 +8,19 @@ const int voltagePin = 34;
 // Sonic wave sensor
 const int trigPin = 19;
 const int echoPin = 18;
-// Vibration sensor
-const int vibraPin = 17;
+// Motion sensor
+const int motionPin = 23;
 // Temperature Sensor
-const int tempPin = 16;
-OneWire oneWire(tempPin);
-DallasTemperature tempSensor(&oneWire);
+// const int SDAPin = 21;
+// const int SCLPin = 22;
+Adafruit_AHTX0 aht;
+Adafruit_Sensor *aht_humi, *aht_temp;
 // Current Sensor
-const int currentPin = 15;
+const int currentPin = 34;
 // Flame Sensor
 const int flamePin = 32;
 // Gas Sensor
-const int gasPin = 21;
+const int gasPin = 33;
 
 void setup() {
   Serial.begin(115200); // Initialize serial communication
@@ -28,13 +28,12 @@ void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(currentPin, INPUT);
-  pinMode(vibraPin, INPUT);
   pinMode(flamePin, INPUT);
   pinMode(gasPin, INPUT);
+  pinMode(motionPin, INPUT);
 
+  aht.begin();
   serialBT.begin("ESP32"); // Bluetooth device name
-
-  tempSensor.begin();
 }
 
 void voltage_sensor() {
@@ -101,7 +100,7 @@ void current_sensor() {
   float current = (voltageA - 1.515) / sensitivity; // Subtract 2.5V (midpoint) and divide by sensitivity
 
   Serial.print("Current: ");
-  Serial.print(current, 3); // Print current with 3 decimal places for precision
+  Serial.print(currentValue, 3); // Print current with 3 decimal places for precision
   Serial.println(" A");
   String strNumber = String(current);
   serialBT.println(strNumber);
@@ -135,34 +134,65 @@ void gas_sensor() {
   Serial.println(gasValue);
   
   String strNumber = String(gasValue);
-  serialBT.println(strNumber);
+  // serialBT.println(strNumber);
   
-  // // Smoke detection logic
-  // if (gasValue > 600) {
-  //   Serial.println("Smoke detected!");
-  //   // Add action for smoke detection
-  // }
+  // Smoke detection logic
+  if (gasValue >= 550) {
+    Serial.println("Alcohol detected!");
+    serialBT.println("Alcohol detected!");
+    // Add action for smoke detection
+  }
 
-  // // Gas danger logic (adjust threshold based on your requirements)
-  // if (gasValue > 800) {
-  //   Serial.println("Dangerous gas level detected!");
-  //   // Add action for dangerous gas detection
-  // }
+  // Gas danger logic (adjust threshold based on your requirements)
+  else if (gasValue >= 120) {
+    Serial.println("Gas detected!");
+    serialBT.println("Gas detected!");
+    // Add action for dangerous gas detection
+  }
 
-  // // Alcohol detection logic (adjust threshold based on your requirements)
-  // if (gasValue > 900) {
-  //   Serial.println("Alcohol detected!");
-  //   // Add action for alcohol detection
-  // }
+  else {
+    Serial.println("No Smoke detected!");
+    serialBT.println("No Smoke detected!");
+  }
+
+  // Alcohol detection logic (adjust threshold based on your requirements)
+  if (gasValue > 900) {
+    // Add action for alcohol detection
+  }
   delay(500);
 }
 
 void temperature_humid_sensor() {
+  // put your main code here, to run repeatedly:
+  aht_temp = aht.getTemperatureSensor();
+  // aht_temp->printSensorDetails();
 
+  aht_humi = aht.getHumiditySensor();
+  // aht_humi->printSensorDetails();
+
+  sensors_event_t humidity;
+  sensors_event_t temp;
+  aht_humi->getEvent(&humidity);
+  aht_temp->getEvent(&temp);
+
+  serialBT.println(String(temp.temperature) + " " + String(humidity.relative_humidity));
+
+  delay(2000); // Delay for 2 seconds before reading again
 }
 
 void motion_sensor() {
+  int motionDetected = digitalRead(motionPin);
 
+  if (motionDetected == HIGH) {
+    Serial.println("Motion detected!");
+    serialBT.println("Motion detected!");
+    // You can add your desired actions here when motion is detected
+  } else {
+    serialBT.println("No Motion detected!");
+    Serial.println("No motion detected");
+  }
+
+  delay(1000);
 }
 
 int cmd = -1;
