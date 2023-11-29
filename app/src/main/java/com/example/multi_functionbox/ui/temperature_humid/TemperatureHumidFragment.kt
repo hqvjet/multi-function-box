@@ -28,7 +28,8 @@ class TemperatureHumidFragment : Fragment() {
         val homeViewModel =
             ViewModelProvider(this).get(TemperatureHumidViewModel::class.java)
 
-        bluetoothViewModel = ViewModelProvider(requireActivity()).get(BluetoothViewModel::class.java)
+        bluetoothViewModel =
+            ViewModelProvider(requireActivity()).get(BluetoothViewModel::class.java)
 
         _binding = FragmentTemperatureHumidBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -58,11 +59,10 @@ class TemperatureHumidFragment : Fragment() {
 
                             // Update UI only when non-empty data arrives
                             if (incomingMessage.trim().isNotEmpty()) {
-                                if (incomingMessage.trim().isNotEmpty()) {
-                                    activity?.runOnUiThread {
-                                        _binding?.textTemperatureHumid?.let { textView ->
-                                            textView.text = incomingMessage.trim()
-                                        }
+                                var arr = incomingMessage.split(" ")
+                                activity?.runOnUiThread {
+                                    _binding?.textTemperatureHumid?.let { textView ->
+                                        textView.text = arr[0] + "°C\n" + arr[1] + "%"
                                     }
                                 }
                             }

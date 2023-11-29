@@ -61,7 +61,7 @@ class DistanceFragment : Fragment() {
                                 if (incomingMessage.trim().isNotEmpty()) {
                                     activity?.runOnUiThread {
                                         _binding?.textDistance?.let { textView ->
-                                            textView.text = incomingMessage.trim()
+                                            textView.text = incomingMessage.trim() + " Cm"
                                         }
                                     }
                                 }

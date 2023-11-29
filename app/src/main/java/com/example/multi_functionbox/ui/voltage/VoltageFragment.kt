@@ -59,7 +59,7 @@ class VoltageFragment : Fragment() {
                             if (incomingMessage.trim().isNotEmpty()) {
                                 activity?.runOnUiThread {
                                     _binding?.textVoltage?.let { textView ->
-                                        textView.text = incomingMessage.trim()
+                                        textView.text = incomingMessage.trim() + " V"
                                     }
                                 }
                             }

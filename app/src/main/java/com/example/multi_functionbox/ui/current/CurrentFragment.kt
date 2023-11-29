@@ -61,7 +61,7 @@ class CurrentFragment : Fragment() {
                                 if (incomingMessage.trim().isNotEmpty()) {
                                     activity?.runOnUiThread {
                                         _binding?.textCurrent?.let { textView ->
-                                            textView.text = incomingMessage.trim()
+                                            textView.text = incomingMessage.trim() + " A"
                                         }
                                     }
                                 }
